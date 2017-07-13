@@ -4,7 +4,7 @@ const path = require('path')
 const request = require('request')
 const fs = require('fs')
 const app = express()
-const convertor = require('./convertor')
+const convert = require('./convertor')
 
 app.set('view engine', 'pug')
 app.set('views', './views')
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/process', (req, res) => {
-  res.send(convertor())
+  res.send(convert())
 })
 
 app.on('SIGTERM', () => {
@@ -34,4 +34,4 @@ app.on('SIGTERM', () => {
 
 let port = process.env.PORT || 7200
 app.listen(port)
-console.log('Oliver is jumping on port:' + port)
+console.log('[Rubberband]: Running on port ' + port)

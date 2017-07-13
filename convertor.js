@@ -1,12 +1,16 @@
-const csv=require('csvtojson')
-const csvFilePath='<path to csv file>'
+const csv = require('csvtojson')
+const csvFilePath = '/_data/testdata.csv'
 
-csv()
-.fromFile(csvFilePath)
-.on('json',(jsonObj)=>{
+
+function convertFromCsv() {
+  csv()
+  .fromFile(csvFilePath)
+  .on('json',(jsonObj)=>{
     // combine csv header row and csv line to a json object
     // jsonObj.a ==> 1 or 4
-})
-.on('done',(error)=>{
+  })
+  .on('done',(error)=>{
     console.log('end')
-})
+  })
+  console.log("Converted CSV - ", jsonObj)
+}

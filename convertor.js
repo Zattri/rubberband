@@ -1,21 +1,27 @@
 const csv = require('csvtojson')
 const csvFilePath = './_data/testdata.csv'
+const appender = require('./append')
 
-module.exports = () => {
-  csv()
-    .fromFile(csvFilePath)
-    .on('json', (jsonObj) => {
-      // combine csv header row and csv line to a json object
-      // jsonObj.a ==> 1 or 4
+module.exports = (index, type, recordIndex) => {
+  let appenderService = appender(index, type, recordIndex)
+  let indexedJson = {}
+  return new Promise((resolve, reject) => {
+    csv()
+      .fromFile(csvFilePath)
+      .on('end_parsed', (jsonObjArr) => {
+        // May need to change json to something else to return full file - Check documentation it's in there
+        console.log("[Rubberband] CSV converted")
+        let indexedRecord = appenderService.generateIndex(jsonObjArr)
+        console.log("INDEXED ", indexedRecord)
+        // indexedJson.append(indexedRecord)
+        indexedJson = indexedRecord
+        resolve(indexedJson)
       })
-    })
-    .on('done', (error) => {
-      if(error) {
-        console.log("[ERROR - CSV] ",error)
-      }
-      console.log('end')
-    })
-  return "OK"
+      .on('done', (error) => {
+        if (error) {
+          reject(error)
+        }
+        console.log("[Rubberband] Job complete")
+      })
+  })
 }
-
-// Need to get the jsonObj to return in global scope

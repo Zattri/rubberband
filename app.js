@@ -23,15 +23,27 @@ app.get('/', (req, res) => {
   res.send(html)
 })
 
-app.get('/process', (req, res) => {
-  res.send(convert())
+app.get('/process/:index/:type/:recordIndex', (req, res) => {
+  const index = req.params.index
+  const type = req.params.type
+  const recordIndex = req.params.recordIndex
+  convert(index, type, recordIndex)
+  .then(indexedJson => {
+    console.log("[Rubberband] Index generated")
+    res.status(200)
+    .send(indexedJson)
+  })
+  .catch(error => {
+    res.status(500)
+    .send(error)
+  })
 })
 
 app.on('SIGTERM', () => {
-  console.log('\nGracefully stopping.\n')
+  console.log('\n[Rubberband] Gracefully stopping.\n')
   app.stop()
 })
 
 let port = process.env.PORT || 7200
 app.listen(port)
-console.log('[Rubberband]: Running on port ' + port)
+console.log('[Rubberband] Running on port ' + port)

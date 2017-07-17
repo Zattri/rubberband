@@ -23,15 +23,14 @@ app.get('/', (req, res) => {
   res.send(html)
 })
 
-app.get('/process/:index/:type/:recordIndex', (req, res) => {
-  const index = req.params.index
-  const type = req.params.type
-  const recordIndex = req.params.recordIndex
-  convert(index, type, recordIndex)
-  .then(indexedJson => {
+app.get('/process', (req, res) => {
+  const index = req.query.index
+  const type = req.query.type
+  convert(index, type)
+  .then(jsonObjArr => {
     console.log("[Rubberband] Index generated")
     res.status(200)
-    .send(indexedJson)
+    .send(jsonObjArr[0])
   })
   .catch(error => {
     res.status(500)

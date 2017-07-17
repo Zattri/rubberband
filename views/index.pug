@@ -12,9 +12,6 @@ html
     div.input
       span.label Type
       input(type="text", name="type").type
-    div.input
-      span.label Start Record
-      input(type="text", name="recordindex").record-index
 
     script(src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa", crossorigin="anonymous")
@@ -24,8 +21,10 @@ html
         $('.' + page).on('click', function() {
           var index = $('.index').val()
           var type = $('.type').val()
-          var recordIndex = $('.record-index').val()
-          var url = window.location.origin + '/process/' + index + "/" + type + "/" + recordIndex
+          var url = window.location.origin + '/process?index=' + index
+          if (type) {
+            url = window.location.origin + '/process?index=' + index + "&type=" + type 
+          }
           window.location.href = url
         })
       }

@@ -1,0 +1,23 @@
+Goals - 
+Install Elasticsearch - DONE
+Call Elasticsearch from Postman - DONE
+Call Elasticsearch API using cURL - DONE
+Create JSON file to upload to cluster - DONE
+Push file to cluster - DONE
+Create a query for the file  - DONE
+
+Convert csv to JSON - 
+Convert LMK_KEY to String - 
+Index the new JSON -
+POST or PUT each document into the index [Just use epc/<county>] - 
+
+Make up new queries - 
+Queries need to search against Building_reference_number
+
+
+
+TROUBLESHOOTING -
+Install latest JDK in order to run elasticsearch.bat
+Set environment variable JAVA_HOME to be the path to the jre folder inside that 
+Set an environment variable of ES_HEAP_SIZE = half your RAM
+

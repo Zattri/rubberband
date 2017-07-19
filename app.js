@@ -4,7 +4,7 @@ const path = require('path')
 const request = require('request')
 const fs = require('fs')
 const app = express()
-const convert = require('./convertor')
+const convert = require('./src/convertor')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 

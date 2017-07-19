@@ -1,0 +1,13 @@
+Hartlepool - 
+CSV 26284
+JSON 85295
+3.25x as large
+
+Middlesborough - 
+CSV 38077
+JSON 122099
+3.20x as large
+
+Max size ~ 100MB
+
+Either auto-push through the indexer or push the files manually using Postman

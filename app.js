@@ -5,6 +5,14 @@ const request = require('request')
 const fs = require('fs')
 const app = express()
 const convert = require('./convertor')
+const bodyParser = require('body-parser')
+const fileUpload = require('express-fileupload')
+
+
+app.use(bodyParser.json({
+  limit: '500mb'
+}))
+app.use(fileUpload())
 
 app.set('view engine', 'pug')
 app.set('views', './views')
@@ -23,14 +31,16 @@ app.get('/', (req, res) => {
   res.send(html)
 })
 
-app.get('/process', (req, res) => {
-  const index = req.query.index
-  const type = req.query.type
-  convert(index, type)
+app.post('/process', (req, res) => {
+  const index = req.body.index
+  const type = req.body.type
+  const csvPath = req.body.csvpath
+  const savePath = req.body.savepath
+  console.log("[Rubberband] Job request sent")
+  convert(index, type, csvPath, savePath)
   .then(jsonObjArr => {
-    console.log("[Rubberband] Index generated")
-    res.status(200)
-    .send(jsonObjArr[0])
+    console.log("[Rubberband] Job completed")
+    res.send("OK")
   })
   .catch(error => {
     res.status(500)

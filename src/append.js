@@ -30,7 +30,6 @@ module.exports = (index, type) => {
 
     console.time("[Rubberband] Writing file")
     let fileNum = 0
-    console.log(stringsToWrite.length)
     stringsToWrite.forEach((writeString) => {
       fs.writeFile(filePath + fileNum + fileType, writeString, function(err) {
         if (err) {
@@ -39,8 +38,6 @@ module.exports = (index, type) => {
       })
       fileNum += 1
     })
-
-
     console.timeEnd("[Rubberband] Writing file")
   }
   return {

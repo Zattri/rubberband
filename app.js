@@ -7,6 +7,7 @@ const app = express()
 const convert = require('./src/convertor')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
+const requester = require('./src/request.js')
 
 
 app.use(bodyParser.json({
@@ -47,6 +48,12 @@ app.post('/process', (req, res) => {
     res.status(500)
     .send(error)
   })
+})
+
+app.post('/test', (req, res) => {
+  const reqText = req.body.text
+  console.log(reqText)
+  res.send(reqText)
 })
 
 app.on('SIGTERM', () => {

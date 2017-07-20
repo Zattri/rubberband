@@ -36,7 +36,8 @@ app.post('/process', (req, res) => {
   const type = req.body.type
   const csvPath = req.body.csvpath
   const savePath = req.body.savepath
-  console.log("[Rubberband] Job request sent")
+  console.log("[Rubberband] Job request sent:", index + "_" + type)
+  console.time("[Rubberband] Job Time")
   convert(index, type, csvPath, savePath)
   .then(jsonObjArr => {
     console.log("[Rubberband] Job completed")

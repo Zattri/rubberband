@@ -3,13 +3,13 @@ module.exports = (index, type) => {
   function generateIndex(jsonObjArr, savePath) {
     let indexedArr = []
     let recordId = 0
-    let filePath = __dirname + "/../output/" + index + "_" + type + ".json"
-    console.log("File path ", filePath)
-    console.log(savePath)
+    let fileType = ".json"
+    let filePath = __dirname + "/../output/" + index + "_" + type + "_"
     if (savePath) {
-      filePath = savePath + ".json"
+      filePath = savePath
     }
-    console.log("[RUBBERBAND] Indexing started")
+    console.log("[Rubberband] Indexing started...")
+    console.time("[Rubberband] Indexing JSON")
     jsonObjArr.forEach((jsonObj) => {
       let indexToAppend = "{\"index\":{\"_index\":\"" + index + "\",\"_id\":" + recordId + "}}"
       if (type) {
@@ -17,22 +17,31 @@ module.exports = (index, type) => {
       }
       indexedArr.push(indexToAppend)
       indexedArr.push(JSON.stringify(jsonObj))
-      // Split index into 40K row chunks, and add to an array of the entire file
-      // Itterate through the array and save each as the given file name plus the index appended on the end
       recordId += 1
     })
-    console.log("[Rubberband] Indexing finished")
-    let indexedString = indexedArr.join("\r\n")
-    // Implement incremental saving based on the size of the array / file
-    // Maybe alter file path around here based on size of array / file - Number them
+    console.timeEnd("[Rubberband] Indexing JSON")
 
-    fs.writeFile(filePath, indexedString, function(err) {
-      if(err) {
-          return console.log("[WRITE ERROR] ", err)
-      }
-      console.log("[Rubberband] File saved - " + __dirname + filePath)
+    let stringsToWrite = []
+    console.time("[Rubberband] Chunking output")
+    while (indexedArr.length > 0) {
+      stringsToWrite.push(indexedArr.splice(0, 50000).join("\r\n"))
+    }
+    console.timeEnd("[Rubberband] Chunking output")
+
+    console.time("[Rubberband] Writing file")
+    let fileNum = 0
+    console.log(stringsToWrite.length)
+    stringsToWrite.forEach((writeString) => {
+      fs.writeFile(filePath + fileNum + fileType, writeString, function(err) {
+        if (err) {
+          return console.log("[ERROR] ", err)
+        }
+      })
+      fileNum += 1
     })
 
+
+    console.timeEnd("[Rubberband] Writing file")
   }
   return {
     generateIndex: generateIndex

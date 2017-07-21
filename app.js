@@ -38,24 +38,25 @@ app.post('/process', (req, res) => {
   // const csvPath = req.body.csvpath
   // const savePath = req.body.savepath
 
-
   let index = "epc"
-  // Change path where necessary
-  let text = fs.readFileSync("./folders.txt").toString('utf-8')
-  let folderArr = text.split("\r\n")
-  console.log("Jobs:",folderArr)
-  Promise.reduce(folderArr, (total, folder) => {
-   let savePath = __dirname + "\\output\\" + folder
-   let csvPath = `${__dirname}\\_data\\all-domestic-certificates\\${folder}\\certificates.csv`
-   console.log("[Rubberband] Job request sent:", folder)
-   console.time("[Rubberband] Job Time")
-   return convert(index, csvPath, savePath)
- })
- .then(result => {
-   console.log (result)
- })
- .catch( error => {
-   console.log(error)
+  let foldersArr = []
+  fs.readdir(__dirname + "\\_data\\all-domestic-certificates\\", function(err, folders) {
+    if (err) {
+      console.log("Could not find directory -",err)
+    }
+    Promise.reduce(folders, function(acc, folder) {
+     let savePath = __dirname + "\\output\\" + folder
+     let csvPath = `${__dirname}\\_data\\all-domestic-certificates\\${folder}\\certificates.csv`
+     console.log("[Rubberband] Job request sent:", folder)
+     console.time("[Rubberband] Job Time")
+     return convert(index, csvPath, savePath)
+   }, [])
+   .then(result => {
+     console.log (result)
+   })
+   .catch( error => {
+     console.log(error)
+   })
  })
 
 })

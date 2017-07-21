@@ -1,6 +1,0 @@
-domestic-E06000009-Blackpool
-domestic-E06000010-Kingston-upon-Hull-City-of
-domestic-E06000011-East-Riding-of-Yorkshire
-domestic-E06000012-North-East-Lincolnshire
-domestic-E06000013-North-Lincolnshire
-domestic-E06000014-York

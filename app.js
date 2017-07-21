@@ -8,7 +8,7 @@ const convert = require('./src/convertor')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 const requester = require('./src/request.js')
-
+const Promise = require('bluebird')
 
 app.use(bodyParser.json({
   limit: '500mb'
@@ -33,21 +33,31 @@ app.get('/', (req, res) => {
 })
 
 app.post('/process', (req, res) => {
-  const index = req.body.index
-  const type = req.body.type
-  const csvPath = req.body.csvpath
-  const savePath = req.body.savepath
-  console.log("[Rubberband] Job request sent:", index + "_" + type)
-  console.time("[Rubberband] Job Time")
-  convert(index, type, csvPath, savePath)
-  .then(jsonObjArr => {
-    console.log("[Rubberband] Job completed")
-    res.send("OK")
-  })
-  .catch(error => {
-    res.status(500)
-    .send(error)
-  })
+  // const index = req.body.index
+  // const type = req.body.type
+  // const csvPath = req.body.csvpath
+  // const savePath = req.body.savepath
+
+
+  let index = "epc"
+  // Change path where necessary
+  let text = fs.readFileSync("./folders.txt").toString('utf-8')
+  let folderArr = text.split("\r\n")
+  console.log("Jobs:",folderArr)
+  Promise.reduce(folderArr, (total, folder) => {
+   let savePath = __dirname + "\\output\\" + folder
+   let csvPath = `${__dirname}\\_data\\all-domestic-certificates\\${folder}\\certificates.csv`
+   console.log("[Rubberband] Job request sent:", folder)
+   console.time("[Rubberband] Job Time")
+   return convert(index, csvPath, savePath)
+ })
+ .then(result => {
+   console.log (result)
+ })
+ .catch( error => {
+   console.log(error)
+ })
+
 })
 
 app.post('/test', (req, res) => {

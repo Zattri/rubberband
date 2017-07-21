@@ -1,15 +1,14 @@
 const fs = require('fs')
-module.exports = (index, type) => {
+module.exports = (index) => {
   function generateIndex(jsonObjArr, savePath) {
     let indexedArr = []
     let fileType = ".json"
-    let filePath = __dirname + "/../output/" + index + "_" + type + "_"
-    if (savePath) {
-      filePath = savePath
-    }
+    let filePath = savePath
+
     console.log("[Rubberband] Indexing started...")
     console.time("[Rubberband] Indexing JSON")
     jsonObjArr.forEach((jsonObj) => {
+      let type = "test"
       let indexToAppend = "{\"index\":{\"_index\":\"" + index + "\",\"_id\":" + jsonObj.LMK_KEY + "}}"
       if (type) {
         indexToAppend = "{\"index\":{\"_index\":\"" + index + "\",\"_type\":\"" + type + "\",\"_id\":" + jsonObj.LMK_KEY + "}}"

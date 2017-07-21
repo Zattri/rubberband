@@ -1,14 +1,14 @@
 const csv = require('csvtojson')
 const appender = require('./append')
 
-module.exports = (index, type, csvPath, savePath) => {
-  let appenderService = appender(index, type)
+module.exports = (index, csvPath, savePath) => {
+  let appenderService = appender(index)
   let indexedJson = {}
   console.time("[Rubberband] Converting")
   return new Promise((resolve, reject) => {
     csv()
       .fromFile(csvPath)
-      .on('end_parsed', (jsonObjArr, savePath) => {
+      .on('end_parsed', (jsonObjArr) => {
         console.log("[Rubberband] CSV converted")
         console.timeEnd("[Rubberband] Converting")
         let indexedJson = appenderService.generateIndex(jsonObjArr, savePath)

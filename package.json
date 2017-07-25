@@ -20,6 +20,6 @@
     "jsdom": "^9.11.0"
   },
   "scripts": {
-    "start": "node --max-old-space-size=4096 app.js"
+    "start": "node --max-old-space-size=8192 app.js"
   }
 }

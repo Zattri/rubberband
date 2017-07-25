@@ -1,3 +1,4 @@
+const fs = require('fs')
 //Http Requests
 function sendRequest() {
   var url = "http://localhost:7200/test";
@@ -25,4 +26,36 @@ function httpGetAsync(url, callback) {
     }
     xmlHttp.open("GET", url, true); // true for asynchronous
     xmlHttp.send(null);
+}
+module.exports = () => {
+  let folderPaths = [__dirname + "/../test/logs.txt", __dirname + "/../test/successful", __dirname + "/../test/failed"]
+
+  folderPaths.forEach((path) => {
+    if (!fs.existsSync(path)) {
+      if (path == (__dirname + "/../test/logs.txt")) {
+        fs.writeFile(path, "Debug Logs", function(err) {
+          if (err) {
+            return console.log("[ERROR] ", err)
+          }
+          else {
+            "[Rubberband] Created logs file"
+          }
+        })
+      }
+      else {
+        fs.mkdir(path, function(err) {
+          if (err) {
+            return console.log("[ERROR] ", err)
+          }
+          else {
+            "[Rubberband] Created",path,"folder"
+          }
+        })
+      }
+    }
+  })
+
+  // Works
+  // fs.rename(__dirname + "/../test/logs.txt",__dirname + "/../test/failed/logs.txt")
+  return "OK"
 }

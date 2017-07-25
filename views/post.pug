@@ -1,0 +1,18 @@
+head
+  title Rubberband - API Requests
+  link(href="https://fonts.googleapis.com/css?family=Raleway", rel="stylesheet", type="text/css")
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+  style!= styleSheet
+  
+body 
+  .container
+    .row
+      .col-xs-12
+        .panel.panel-default Rubberband - JSON Bulk Post Requests
+          .panel-body
+            form#uploadForm(ref='uploadForm', action='http://localhost:7200/bulkpost', method='post', enctype='multipart/form-data')
+              input(type="search" placeholder="Server Address", name='address').form-control.survey-id
+              input(type="search" placeholder="Upload Folder", name='folderpath').form-control.survey-id
+              input.btn.btn-lg.upload-btn(type='submit', value='Upload Files')
+  script(src="https://code.jquery.com/jquery-2.2.0.min.js")
+  script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")

@@ -7,7 +7,7 @@ const app = express()
 const convert = require('./src/convertor')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
-const requester = require('./src/request.js')
+const requester = require('./src/request')
 const Promise = require('bluebird')
 
 app.use(bodyParser.json({
@@ -22,13 +22,21 @@ app.get('/ok', (req, res) => {
   res.send('OK')
 })
 
-const template = pug.compileFile(path.join(__dirname, 'views', 'index.pug'))
+const homeTemplate = pug.compileFile(path.join(__dirname, 'views', 'index.pug'))
+const postTemplate = pug.compileFile(path.join(__dirname, 'views', 'post.pug'))
 const styleSheet = fs.readFileSync(path.join(__dirname, 'public', 'common.css'))
 
 app.get('/', (req, res) => {
   let model = {}
   model.styleSheet = styleSheet
-  const html = template(model)
+  const html = homeTemplate(model)
+  res.send(html)
+})
+
+app.get('/post', (req, res) => {
+  let model = {}
+  model.styleSheet = styleSheet
+  const html = postTemplate(model)
   res.send(html)
 })
 
@@ -61,10 +69,12 @@ app.post('/process', (req, res) => {
 
 })
 
-app.post('/test', (req, res) => {
-  const reqText = req.body.text
-  console.log(reqText)
-  res.send(reqText)
+app.post('/bulkpost', (req, res) => {
+  const address = req.body.address
+  const folderPath = req.body.folderpath
+
+  res.send(requester())
+  // Make HTTP POST request loop
 })
 
 app.on('SIGTERM', () => {

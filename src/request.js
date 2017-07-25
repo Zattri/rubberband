@@ -1,61 +1,60 @@
 const fs = require('fs')
-//Http Requests
-function sendRequest() {
-  var url = "http://localhost:7200/test";
-  var method = "POST";
-  var postData = '{ "Text": "Hi there how ya doin"}';
-  var async = true;
-  var request = new XMLHttpRequest();
+const request = require('request')
 
-  request.onload = function () {
-    // You can get all kinds of information about the HTTP response.
-    var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
-    var data = request.responseText; // Returned data, e.g., an HTML document.
+module.exports = () => {
+  // Hard coded for now, make them each a name that's set, then used
+  // let folderPaths = [__dirname + "/../test/logs.txt", __dirname + "/../test/successful", __dirname + "/../test/failed"]
+  // folderPaths.forEach((path) => {
+  //   if (!fs.existsSync(path)) {
+  //     if (path == (__dirname + "/../test/logs.txt")) {
+  //       fs.writeFile(path, "Debug Logs", function(err) {
+  //         if (err) {
+  //           return console.log("[ERROR] ", err)
+  //         }
+  //         else {
+  //           "[Rubberband] Created logs file"
+  //         }
+  //       })
+  //     }
+  //     else {
+  //       fs.mkdir(path, function(err) {
+  //         if (err) {
+  //           return console.log("[ERROR] ", err)
+  //         }
+  //         else {
+  //           "[Rubberband] Created",path,"folder"
+  //         }
+  //       })
+  //     }
+  //   }
+  // })
+
+  path = "/epc/_bulk"
+
+  let jsonObj = require("../output/domestic-E06000017-Rutland0.json")
+  let options = {
+    url: "http://localhost:9222" + path,
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8'
+    },
+    body: jsonObj
   }
 
-  request.open(method, url, async);
-  request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  request.send(postData);
-}
-
-function httpGetAsync(url, callback) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
+  request.post(options, function(err, res, body) {
+    if (err) {
+      console.log("[ERROR]",err)
     }
-    xmlHttp.open("GET", url, true); // true for asynchronous
-    xmlHttp.send(null);
-}
-module.exports = () => {
-  let folderPaths = [__dirname + "/../test/logs.txt", __dirname + "/../test/successful", __dirname + "/../test/failed"]
-
-  folderPaths.forEach((path) => {
-    if (!fs.existsSync(path)) {
-      if (path == (__dirname + "/../test/logs.txt")) {
-        fs.writeFile(path, "Debug Logs", function(err) {
-          if (err) {
-            return console.log("[ERROR] ", err)
-          }
-          else {
-            "[Rubberband] Created logs file"
-          }
-        })
-      }
-      else {
-        fs.mkdir(path, function(err) {
-          if (err) {
-            return console.log("[ERROR] ", err)
-          }
-          else {
-            "[Rubberband] Created",path,"folder"
-          }
-        })
-      }
-    }
+    console.log(body)
+    return body
   })
+
+  // Read in the JSON file into either an object or a string - hopefully object
+  // Set the json parameter to true and set the body to the JSON object
+  // POST as normal - Make sure to set the path correctly
 
   // Works
   // fs.rename(__dirname + "/../test/logs.txt",__dirname + "/../test/failed/logs.txt")
-  return "OK"
+  //return "OK"
 }

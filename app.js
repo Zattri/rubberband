@@ -47,7 +47,6 @@ app.post('/process', (req, res) => {
   // const savePath = req.body.savepath
 
   let index = "epc"
-  let foldersArr = []
   fs.readdir(__dirname + "\\_data\\all-domestic-certificates\\", function(err, folders) {
     if (err) {
       console.log("Could not find directory -",err)
@@ -55,7 +54,7 @@ app.post('/process', (req, res) => {
     Promise.reduce(folders, function(acc, folder) {
      let savePath = __dirname + "\\output\\" + folder
      let csvPath = `${__dirname}\\_data\\all-domestic-certificates\\${folder}\\certificates.csv`
-     console.log("[Rubberband] Job request sent:", folder)
+     console.log("[Rubberband] Convert request sent:", folder)
      console.time("[Rubberband] Job Time")
      return convert(index, csvPath, savePath)
    }, [])
@@ -71,9 +70,11 @@ app.post('/process', (req, res) => {
 
 app.post('/bulkpost', (req, res) => {
   const address = req.body.address
-  const folderPath = req.body.folderpath
+  const dirPath = req.body.folder
+  const elasticParams = req.body.params
+  const reqMethod = req.body.method
 
-  res.send(requester())
+  res.send(requester(address, elasticParams, reqMethod, dirPath))
   // Make HTTP POST request loop
 })
 

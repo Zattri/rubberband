@@ -9,25 +9,33 @@ const address = "http://localhost:9222"
 const reqMethod = "POST"
 const elasticParams = "/epc/_bulk"
 
-module.exports = () => {
+module.exports = () => { // Need to add in params
+  let erroredFiles = []
   fs.readdir(dirPath, function(err, files) {
     if (err) {
       return console.log("Could not find directory -", err)
     }
-    return processWithRetry(files)
+    processWithRetry(files, erroredFiles)
+    .then(errors => {
+      console.log("[Rubberband] Jobs finished")
+      console.log("[Rubberband] Errored Jobs:\n- " + errors.join("\n- "))
+      return errors
+    })
   })
 }
 
-async function processWithRetry(files) {
+async function processWithRetry(files, erroredFiles) {
   try {
     return await processFile(files)
   }
   catch (err) {
+    console.log("Error String",err.toString().replace("Error: ", ""))
     files.splice(0, files.indexOf(err.toString().replace("Error: ", "")) + 1)
-    await processWithRetry(files)
+    erroredFiles.push(err.toString().replace("Error: ", ""))
+    await processWithRetry(files, erroredFiles)
+    return erroredFiles
   }
 }
-
 
 function processFile(files) {
   return Promise.reduce(files, function(acc, file) {
@@ -40,7 +48,7 @@ function processFile(files) {
         'Accept': 'application/json',
         'Accept-Charset': 'utf-8'
       },
-      body: '{  "query": {    "match": {    	"LMK_KEY": "107715620080528090541"    }  }}'
+      body: jsonString
     }
 
     return new Promise((resolve, reject) => {
@@ -56,7 +64,7 @@ function processFile(files) {
         }
         else {
           console.log("Job successful:", file)
-          console.log("Took:", bodyJson["took"], "| Errors:", bodyJson["errors"])
+          console.log("- Took:", bodyJson["took"], "| Errors:", bodyJson["errors"])
           resolve()
         }
       })

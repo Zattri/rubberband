@@ -59,7 +59,7 @@ app.post('/process', (req, res) => {
      return convert(index, csvPath, savePath)
    }, [])
    .then(result => {
-     console.log (result)
+     console.log(result)
    })
    .catch( error => {
      console.log(error)
@@ -73,9 +73,7 @@ app.post('/bulkpost', (req, res) => {
   const dirPath = req.body.folder
   const elasticParams = req.body.params
   const reqMethod = req.body.method
-
   res.send(requester(address, elasticParams, reqMethod, dirPath))
-  // Make HTTP POST request loop
 })
 
 app.on('SIGTERM', () => {

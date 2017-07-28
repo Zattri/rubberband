@@ -4,8 +4,8 @@ const Promise = require('bluebird')
 
 
 // FOR TESTING
-const dirPath = "C:/Users/oliverfavell/Documents/etech/rubberband/test"
-const address = "http://localhost:9222"
+const dirPath = "C:\\Users\\oliverfavell\\Documents\\etech\\rubberband\\test"
+const address = "http://192.168.70.56:9200"
 const reqMethod = "POST"
 const elasticParams = "/epc/_bulk"
 
@@ -18,7 +18,9 @@ module.exports = () => { // Need to add in params
     processWithRetry(files, erroredFiles)
     .then(errors => {
       console.log("[Rubberband] Jobs finished")
-      console.log("[Rubberband] Errored Jobs:\n- " + errors.join("\n- "))
+      if (errors) {
+        console.log("[Rubberband] Errored Jobs:\n- " + errors.join("\n- "))
+      }
       return errors
     })
   })
@@ -29,7 +31,7 @@ async function processWithRetry(files, erroredFiles) {
     return await processFile(files)
   }
   catch (err) {
-    console.log("Error String",err.toString().replace("Error: ", ""))
+    console.log("Errored Job -",err.toString().replace("Error: ", ""))
     files.splice(0, files.indexOf(err.toString().replace("Error: ", "")) + 1)
     erroredFiles.push(err.toString().replace("Error: ", ""))
     await processWithRetry(files, erroredFiles)
@@ -39,7 +41,7 @@ async function processWithRetry(files, erroredFiles) {
 
 function processFile(files) {
   return Promise.reduce(files, function(acc, file) {
-    console.log("[Rubberband] Post request sent:", file)
+    console.log("[Rubberband] Job request sent:", file)
     let jsonString = fs.readFileSync(`${dirPath}\\${file}`)
     let options = {
       url: address + elasticParams,
@@ -60,6 +62,7 @@ function processFile(files) {
         }
         else if (err) {
           console.log("[JOB ERROR] - " + JSON.stringify(bodyJson["error"]))
+          console.log(err)
           reject(new Error(file))
         }
         else {
@@ -71,6 +74,3 @@ function processFile(files) {
     })
   }, [])
 }
-// To do -
-// List of files that need re-processing
-// List off those files at the end of the job - Or put into file

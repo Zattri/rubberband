@@ -13,7 +13,8 @@
     "express-fileupload": "^0.1.4",
     "html-minifier": "^3.2.2",
     "pug": "^2.0.0-rc.2",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "string-similarity": "^1.2.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",

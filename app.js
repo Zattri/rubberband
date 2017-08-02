@@ -4,11 +4,13 @@ const path = require('path')
 const request = require('request')
 const fs = require('fs')
 const app = express()
-const convert = require('./src/convertor')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
-const requester = require('./src/request')
 const Promise = require('bluebird')
+
+const convert = require('./src/convertor')
+const requester = require('./src/request')
+const query = require('./src/query.js')
 
 app.use(bodyParser.json({
   limit: '500mb'
@@ -40,6 +42,16 @@ app.get('/post', (req, res) => {
   res.send(html)
 })
 
+app.get('/query', (req, res) => {
+  return query()
+  .then(result => {
+    res.status(200).send(result)
+  })
+  .catch(err => {
+    res.status(500).send(err)
+  })
+})
+
 app.post('/process', (req, res) => {
   // const index = req.body.index
   // const type = req.body.type
@@ -59,7 +71,7 @@ app.post('/process', (req, res) => {
      return convert(index, csvPath, savePath)
    }, [])
    .then(result => {
-     console.log(result)
+     console.log("Final result",result)
    })
    .catch( error => {
      console.log(error)

@@ -5,7 +5,7 @@ const reqMethod = "POST"
 const elasticParams = "/epc/_search"
 
 module.exports = () => {
-  let searchString = '1, Kossuth Street, LONDON, SE10 0AA'
+  let searchString = 'Flat 11, Derwent Street, LONDON, SE10 0AD'
   let queryBody = '{  "query": {    "multi_match": {      "query": "' + searchString + '",      "minimum_should_match": 5,      "type": "cross_fields",      "fields": ["ADDRESS1^3", "ADDRESS2", "ADDRESS3", "POSTCODE^2", "COUNTY^2"]    }  }}'
   let options = {
     url: address + elasticParams,
@@ -20,15 +20,17 @@ module.exports = () => {
   return sendQuery(options)
     .then(output => {
       return output.hits.hits.map(function(hit) {
-        let searchTerms = searchString.split(',').map(function(term) {
+        let searchTerms = searchString.toLowerCase().split(',').map(function(term) {
           return term.trim()
         })
         console.log(hit._source.ADDRESS1)
-        let accuracyCount = (compare.compareTwoStrings(hit._source.POSTCODE, searchTerms.pop()))
-        accuracyCount += (compare.compareTwoStrings(hit._source.COUNTY, searchTerms.pop()))
-        accuracyCount += (compare.compareTwoStrings(hit._source.ADDRESS, searchTerms.join()))
-        hit._source.ACCURACY = ((accuracyCount * 100) / 3)
-        console.log("Accuracy",hit._source.ACCURACY)
+        let accuracyCount = (compare.compareTwoStrings(hit._source.POSTCODE.toLowerCase(), searchTerms.pop())) * 2
+        accuracyCount += (compare.compareTwoStrings(hit._source.COUNTY.toLowerCase(), searchTerms.pop()))
+        // Break down the source address into an array then loop through both arrays
+        accuracyCount += (compare.compareTwoStrings(hit._source.ADDRESS.toLowerCase(), searchTerms.join())) * 1.5
+        hit._accuracy = ((accuracyCount * 100) / 4.5)
+        console.log("Accuracy",hit._accuracy)
+        return hit
       })
     })
 }

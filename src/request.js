@@ -31,9 +31,9 @@ async function processWithRetry(files, erroredFiles) {
     return await processFile(files)
   }
   catch (err) {
-    console.log("Errored Job -",err.toString().replace("Error: ", ""))
     files.splice(0, files.indexOf(err.toString().replace("Error: ", "")) + 1)
     erroredFiles.push(err.toString().replace("Error: ", ""))
+    console.log("Errored Job -",erroredFiles[erroredFiles.length -1])
     await processWithRetry(files, erroredFiles)
     return erroredFiles
   }

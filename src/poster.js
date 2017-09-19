@@ -9,6 +9,8 @@ const address = "http://192.168.70.56:9200"
 const reqMethod = "POST"
 const elasticParams = "/epc/_bulk"
 
+// Declare const inside of module.exports as param || hard coded
+
 module.exports = () => { // Need to add in params
   let erroredFiles = []
   fs.readdir(dirPath, function(err, files) {

@@ -71,19 +71,19 @@ app.post('/process', (req, res) => {
       console.log("Could not find directory -",err)
     }
     Promise.reduce(folders, function(acc, folder) {
-     let savePath = __dirname + "\\output\\" + folder
-     let csvPath = `${__dirname}\\_data\\all-domestic-certificates\\${folder}\\certificates.csv`
-     console.log("[Rubberband] Convert request sent:", folder)
-     console.time("[Rubberband] Job Time")
-     return convert(index, csvPath, savePath)
-   }, [])
-   .then(result => {
-     console.log("Final result",result)
-   })
-   .catch( error => {
-     console.log(error)
-   })
- })
+      let savePath = __dirname + "\\output\\" + folder
+      let csvPath = `${__dirname}\\_data\\all-domestic-certificates\\${folder}\\certificates.csv`
+      console.log("[Rubberband] Convert request sent:", folder)
+      console.time("[Rubberband] Job Time")
+      return convert(index, csvPath, savePath)
+  }, [])
+    .then(result => {
+      console.log("Final result",result)
+    })
+    .catch( error => {
+      console.log(error)
+    })
+  })
 })
 
 app.post('/bulkpost', (req, res) => {
